@@ -7,7 +7,6 @@ use crate::fallback::fish_mkstemp_cloexec;
 use crate::fds::AutoCloseFd;
 use crate::fds::{open_cloexec, wopen_cloexec};
 use crate::flog::{FLOG, FLOGF};
-use crate::libc::C_O_EXLOCK;
 use crate::path::path_get_config;
 use crate::path::{path_get_config_remoteness, DirRemoteness};
 use crate::wchar::prelude::*;
@@ -420,6 +419,7 @@ impl EnvUniversal {
     }
 
     // Functions concerned with saving.
+    #[allow(non_snake_case)]
     fn open_and_acquire_lock(&mut self) -> AutoCloseFd {
         // Attempt to open the file for reading at the given path, atomically acquiring a lock. On BSD,
         // we can use O_EXLOCK. On Linux, we open the file, take a lock, and then compare fstat() to
@@ -430,8 +430,12 @@ impl EnvUniversal {
         let mut locked_by_open = false;
         let mut flags = O_RDWR | O_CREAT;
 
-        #[allow(non_snake_case)]
-        let O_EXLOCK = unsafe { C_O_EXLOCK() };
+        // TODO: For hysterical raisins we define this as 0
+        #[cfg(HAVE_O_EXLOCK)]
+        let O_EXLOCK = libc::O_EXLOCK;
+        #[cfg(not(HAVE_O_EXLOCK))]
+        let O_EXLOCK = 0;
+
         if O_EXLOCK != 0 && self.do_flock {
             flags |= O_EXLOCK;
             locked_by_open = true;

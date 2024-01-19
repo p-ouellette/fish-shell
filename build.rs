@@ -103,6 +103,9 @@ fn detect_cfgs(target: Target) {
         ("HAVE_WAITSTATUS_SIGNAL_RET", &|target| {
             Ok(target.r#if("WEXITSTATUS(0x007f) == 0x7f", "sys/wait.h"))
         }),
+        ("HAVE_O_EXLOCK", &|target| {
+            Ok(target.has_symbol("O_EXLOCK", None))
+        }),
     ] {
         match handler(&target) {
             Err(e) => rsconf::warn!("{}: {}", name, e),

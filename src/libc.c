@@ -64,14 +64,6 @@ int C_PC_CASE_SENSITIVE() {
 
 FILE* stdout_stream() { return stdout; }
 
-int C_O_EXLOCK() {
-#ifdef O_EXLOCK
-    return O_EXLOCK;
-#else
-    return 0;
-#endif
-}
-
 int C_RLIMIT_CORE() { return RLIMIT_CORE; }
 int C_RLIMIT_DATA() { return RLIMIT_DATA; }
 int C_RLIMIT_FSIZE() { return RLIMIT_FSIZE; }
