@@ -1,2 +1,0 @@
-/* The size of wchar_t in bits. */
-#define WCHAR_T_BITS ${WCHAR_T_BITS}
