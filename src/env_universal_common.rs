@@ -7,7 +7,7 @@ use crate::fallback::fish_mkstemp_cloexec;
 use crate::fds::AutoCloseFd;
 use crate::fds::{open_cloexec, wopen_cloexec};
 use crate::flog::{FLOG, FLOGF};
-use crate::libc::{C_O_EXLOCK, UVAR_FILE_SET_MTIME_HACK};
+use crate::libc::C_O_EXLOCK;
 use crate::path::path_get_config;
 use crate::path::{path_get_config_remoteness, DirRemoteness};
 use crate::wchar::prelude::*;
@@ -793,7 +793,8 @@ impl EnvUniversal {
             //
             // It's probably worth finding a simpler solution to this. The tests ran into this, but it's
             // unlikely to affect users.
-            if unsafe { UVAR_FILE_SET_MTIME_HACK() } {
+            #[cfg(UVAR_FILE_SET_MTIME_HACK)]
+            {
                 let mut times: [libc::timespec; 2] = unsafe { std::mem::zeroed() };
                 times[0].tv_nsec = UTIME_OMIT; // don't change ctime
                 if unsafe { libc::clock_gettime(CLOCK_REALTIME, &mut times[1]) } != 0 {

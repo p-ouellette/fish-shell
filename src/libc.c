@@ -72,15 +72,6 @@ int C_O_EXLOCK() {
 #endif
 }
 
-static const bool uvar_file_set_mtime_hack =
-#ifdef UVAR_FILE_SET_MTIME_HACK
-    true;
-#else
-    false;
-#endif
-#undef UVAR_FILE_SET_MTIME_HACK
-bool UVAR_FILE_SET_MTIME_HACK() { return uvar_file_set_mtime_hack; }
-
 int C_RLIMIT_CORE() { return RLIMIT_CORE; }
 int C_RLIMIT_DATA() { return RLIMIT_DATA; }
 int C_RLIMIT_FSIZE() { return RLIMIT_FSIZE; }

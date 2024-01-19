@@ -1,5 +1,2 @@
-/* Define to use clock_gettime and futimens to hack around Linux mtime issue */
-#cmakedefine UVAR_FILE_SET_MTIME_HACK 1
-
 /* The size of wchar_t in bits. */
 #define WCHAR_T_BITS ${WCHAR_T_BITS}

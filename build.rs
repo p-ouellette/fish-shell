@@ -92,6 +92,14 @@ fn detect_cfgs(target: Target) {
         ("HAVE_EVENTFD", &|target| {
             Ok(target.has_header("sys/eventfd.h"))
         }),
+        ("UVAR_FILE_SET_MTIME_HACK", &|target| {
+            #[cfg(any(target_os = "linux", target_os = "android"))]
+            return Ok(target.has_symbol("clock_gettime", None)
+               && target.has_symbol("futimens", None)
+            );
+            #[cfg(not(any(target_os = "linux", target_os = "android")))]
+            Ok(false)
+        }),
         ("HAVE_WAITSTATUS_SIGNAL_RET", &|target| {
             Ok(target.r#if("WEXITSTATUS(0x007f) == 0x7f", "sys/wait.h"))
         }),
